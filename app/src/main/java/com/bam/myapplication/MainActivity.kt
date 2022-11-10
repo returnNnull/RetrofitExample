@@ -27,60 +27,14 @@ class MainActivity : AppCompatActivity() {
 
         val postApi = retrofit.create(PostRestApi::class.java)
 
+        val repository = PostsRepository(postApi)
+        val adapter = PostsListAdapter()
+        binding.postListRecyclerView.adapter = adapter
 
-        binding.button.setOnClickListener {
-            getById(postApi)
+
+        repository.getAll{
+            adapter.setPosts(repository.posts)
         }
 
-        binding.button2.setOnClickListener {
-            insertPost(postApi)
-        }
-
-    }
-
-    private fun insertPost(postApi: PostRestApi) {
-        val post = PostResponse(1, 101, "text", "body")
-
-        val result = postApi.insert(post)
-
-        result.enqueue(object : Callback<PostResponse>{
-            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
-
-        result.enqueue(object : Callback<PostResponse> {
-            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
-                binding.textView.text = response.raw().code().toString()
-            }
-
-            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
-                binding.textView.text = t.message
-            }
-
-        })
-
-    }
-
-
-    private fun getById(postApi: PostRestApi) {
-        val id = binding.editTextTextPersonName.text.toString().toInt()
-        val result = postApi.getById(id)
-        result.enqueue(object : Callback<PostResponse> {
-            override fun onResponse(
-                call: Call<PostResponse>,
-                response: Response<PostResponse>
-            ) {
-                binding.textView.text = response.body().toString()
-            }
-
-            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
-            }
-        })
     }
 }
