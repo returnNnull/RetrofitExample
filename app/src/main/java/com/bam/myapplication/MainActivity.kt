@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        ///
         result.enqueue(object : Callback<PostResponse> {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 binding.textView.text = response.raw().code().toString()
